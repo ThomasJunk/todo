@@ -2,22 +2,16 @@ from functools import wraps
 import falcon
 
 
-def login_required(func):
-    """login required decorator
+def login_required(req, resp, resource, params):
+    """Checks whether user is logged in
 
     Args:
-        func (function): route
-
-    Returns:
-        function: route
+        req (object): Request
+        resp (object): Response
+        resource (object): Ressource accessed
+        params (object): Params
     """
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        _, req, resp = args
-        session = session = req.env["beaker.session"]
-        if not "user" in session:
-            resp.status = falcon.HTTPUnauthorized("User is not logged in")
-            return
-        req.context.session = session
-        return func(*args, **kwargs)
-    return wrapped
+    session = session = req.env["beaker.session"]
+    if not "user" in session:
+        raise falcon.HTTPUnauthorized("User is not logged in")
+    req.context.session = session

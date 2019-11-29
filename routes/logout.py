@@ -8,7 +8,7 @@ from middleware import login_required
 class Logout:
     """Logout
     """
-    @login_required
+    @falcon.before(login_required)
     def on_get(self, req, resp):
         """Handles GET requests"""
         session = req.context.session

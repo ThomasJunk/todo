@@ -2,30 +2,23 @@
 """
 
 from functools import wraps
+from .login import login_required
 import falcon
 
 
-def admin_role(func):
-    """Admin role decorator
+def required_role(req, resp, resource, params, role):
+    """Checks whether user is admin
 
     Args:
-        func (function): route
-
-    Returns:
-        function: route
+        req (object): Request
+        resp (object): Response
+        resource (object): Ressource accessed
+        params (object): Params
     """
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        _, req, resp = args
-        session = session = req.env["beaker.session"]
-        if not "user" in session:
-            resp.status = falcon.falcon.HTTPUnauthorized(
-                "User is not logged in")
-            return
-        user = session["user"]
-        if not "admin" in user["groups"]:
-            resp.status = falcon.HTTPUnauthorized("User is not allowed")
-            return
-        req.context.session = session
-        return func(*args, **kwargs)
-    return wrapped
+    session = req.env["beaker.session"]
+    if not role in session:
+        raise falcon.HTTPUnauthorized("User is not logged in")
+    user = session["user"]
+    if not role in user["groups"]:
+        raise falcon.HTTPUnauthorized("User is not allowed")
+    req.context.session = session

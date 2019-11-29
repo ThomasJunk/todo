@@ -2,4 +2,4 @@
 """
 
 from .login import login_required
-from .roles import admin_role
+from .roles import required_role
