@@ -8,8 +8,9 @@ class Base:
     """Baseclass for repositories
     """
 
-    def __init__(self, repository):
+    def __init__(self, repository, log):
         self.repository = repository
+        self.log = log
 
     def list(self):
         """Lists all items

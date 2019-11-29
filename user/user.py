@@ -12,7 +12,7 @@ class User:
     def __init__(self, login, password, groups=None):
         self.login = login
         self.password = password
-        self.usergroups = groups or set()
+        self.usergroups = set(groups)
 
     @property
     def groups(self):
@@ -38,3 +38,12 @@ class User:
             group (string): group name
         """
         self.usergroups.remove(group)
+
+    def to_dict(self):
+        """Dictionary representation
+        """
+        return {
+            "login": self.login,
+            "groups": list(self.usergroups),
+            "password": self.password
+        }

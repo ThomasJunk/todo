@@ -1,6 +1,7 @@
 """Bootstrapping the server
 """
 
+import logging
 import os
 
 import falcon
@@ -10,20 +11,25 @@ from dotenv import load_dotenv
 import db
 import routes
 import todo
+import user
 
 load_dotenv()
 
 app = falcon.API()
 
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
 db = db.create_database(os.getenv("DBFILE", "db.json"))
 
 login = routes.Login()
 logout = routes.Logout()
-todos = routes.Todo(todo.create_Service(db))
+todos = routes.Todo(todo.create_Service(db, logging), logging)
+users = routes.User(user.create_Service(db, logging), logging)
 
 app.add_route("/login", login)
 app.add_route("/logout", logout)
 app.add_route("/todos", todos)
+app.add_route("/users", users)
 
 session_opts = {
     "session.type": "memory",

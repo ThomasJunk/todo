@@ -3,14 +3,15 @@
 
 import json
 import todo
+from .base import RouteBase
 
 
-class Todo:
-    """Handles routes for ToDos
+class Todo(RouteBase):
+    """Handles Todos
+
+    Args:
+        RouteBase (object): Baseclass
     """
-
-    def __init__(self, service):
-        self.service = service
 
     def on_get(self, req, resp):
         """GET request

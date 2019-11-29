@@ -19,6 +19,8 @@ falcon = "*"
 python-dotenv = "*"
 gunicorn = "*"
 tinydb = "*"
+passlib = "*"
+argon2-cffi = "*"
 
 [requires]
 python_version = "3.7"
