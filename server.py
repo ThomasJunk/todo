@@ -3,6 +3,7 @@
 
 import logging
 import os
+from wsgiref import simple_server
 
 import falcon
 from beaker.middleware import SessionMiddleware
@@ -38,3 +39,7 @@ session_opts = {
     "session.key": os.getenv("COOKIE_NAME", "session")
 }
 app = SessionMiddleware(app, session_opts)
+
+if __name__ == '__main__':
+    httpd = simple_server.make_server('127.0.0.1', 8000, app)
+    httpd.serve_forever()
