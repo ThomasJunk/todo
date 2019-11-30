@@ -1,11 +1,11 @@
 """User handler
 """
 
-import json
 
 import falcon
 
-import todo
+from middleware import login_required
+from user import UserExists
 
 from .base import RouteBase
 
@@ -17,6 +17,7 @@ class User(RouteBase):
         RouteBase (object): Base class
     """
 
+    @falcon.before(login_required)
     def on_get(self, req, resp):
         """GET request
 
@@ -27,6 +28,7 @@ class User(RouteBase):
         users = self.service.list()
         resp.media = list(users)
 
+    @falcon.before(login_required)
     def on_post(self, req, resp):
         """POST request
 
@@ -39,5 +41,5 @@ class User(RouteBase):
             item = self.service.create_new_user(
                 user["login"], user["password"])
             resp.media = item.to_dict()
-        except:
+        except UserExists:
             resp.status = falcon.HTTP_409

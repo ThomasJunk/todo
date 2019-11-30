@@ -1,8 +1,11 @@
 """Todo handler
 """
 
-import json
+import falcon
+
 import todo
+from middleware import login_required
+
 from .base import RouteBase
 
 
@@ -13,6 +16,7 @@ class Todo(RouteBase):
         RouteBase (object): Baseclass
     """
 
+    @falcon.before(login_required)
     def on_get(self, req, resp):
         """GET request
 
@@ -23,6 +27,7 @@ class Todo(RouteBase):
         todos = self.service.list()
         resp.media = list(todos)
 
+    @falcon.before(login_required)
     def on_post(self, req, resp):
         """POST request
 
