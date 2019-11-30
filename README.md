@@ -2,19 +2,10 @@
 
 Used as a playground to explore Python falcon framework
 
-Install with
-
-```bash
-pipenv install
-```
-
-Enter virtual env
-
-```bash
-pipenv shell
-```
-
 Run with
 ```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ./run-app.sh
 ```
