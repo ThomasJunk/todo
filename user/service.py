@@ -64,7 +64,7 @@ class Service(service.Base):
         Returns:
             object: User
         """
-        pw_hash = argon2.using(rounds=5).hash("password")
+        pw_hash = argon2.using(rounds=5).hash(password)
         usr = User(login=login,
                    password=pw_hash,
                    groups=groups.default_groups
@@ -89,4 +89,4 @@ class Service(service.Base):
         user = self.repository.get_user_by_login(login)
         if not user:
             return False
-        return argon2.verify(password, user.password)
+        return argon2.verify(password, user["password"])
