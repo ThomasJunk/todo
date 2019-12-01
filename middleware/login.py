@@ -1,4 +1,8 @@
-from functools import wraps
+"""Guarding for login
+
+Raises:
+    falcon.HTTPUnauthorized: In case the user is not logged in
+"""
 import falcon
 
 
@@ -11,7 +15,7 @@ def login_required(req, resp, resource, params):
         resource (object): Ressource accessed
         params (object): Params
     """
-    session = session = req.env["beaker.session"]
-    if not "user" in session:
+    if "user" in req.context.session:
+        return
+    else:
         raise falcon.HTTPUnauthorized("User is not logged in")
-    req.context.session = session

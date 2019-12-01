@@ -15,7 +15,7 @@ def required_role(req, resp, resource, params, role):
         resource (object): Ressource accessed
         params (object): Params
     """
-    session = req.env["beaker.session"]
+    session = req.context.session
     if not role in session:
         raise falcon.HTTPUnauthorized("User is not logged in")
     user = session["user"]

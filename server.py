@@ -10,13 +10,16 @@ from beaker.middleware import SessionMiddleware
 from dotenv import load_dotenv
 
 import db
+import middleware
 import routes
 import todo
 import user
 
 load_dotenv()
 
-app = falcon.API()
+app = falcon.API(
+    middleware=[middleware.Session()]
+)
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
