@@ -115,4 +115,5 @@ dmypy.json
 .history
 db.json
 .venv
+cov.xml
 # End of https://www.gitignore.io/api/python,visualstudiocode
