@@ -18,7 +18,10 @@ import user
 load_dotenv()
 
 app = falcon.API(
-    middleware=[middleware.Session()]
+    middleware=[
+        middleware.RequestID(),
+        middleware.Session()
+    ]
 )
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
