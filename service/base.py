@@ -1,7 +1,6 @@
+# SPDX-License-Identifier: MIT
 """Baseclass for services
 """
-
-# pylint: disable = invalid-name, too-few-public-methods
 
 
 class Base:

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Todo represents a Todo
 """
 import uuid

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Provides access to the User internals
 """
 from .repository import Repository

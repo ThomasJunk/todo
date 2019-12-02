@@ -1,8 +1,7 @@
+# SPDX-License-Identifier: MIT
 """Middleware concerned with user roles
 """
 
-from functools import wraps
-from .login import login_required
 import falcon
 
 

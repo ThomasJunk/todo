@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Provides access to the ToDo internals
 """
 

@@ -1,6 +1,7 @@
+# SPDX-License-Identifier: MIT
+from tinydb import TinyDB
 """Database module
 """
-from tinydb import TinyDB
 
 
 def create_database(filename):

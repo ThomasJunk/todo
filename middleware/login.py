@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Guarding for login
 
 Raises:

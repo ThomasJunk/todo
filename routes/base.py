@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Initializes route handling class
 """
 
