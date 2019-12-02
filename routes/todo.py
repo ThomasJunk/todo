@@ -35,7 +35,11 @@ class Todo(RouteBase):
             req (object): request
             resp (resp): response
         """
-        content = req.media.get("todo")["content"]
-        item = todo.New(content)
+        t = req.media.get("todo")
+        if t is None:
+            resp.status = falcon.HTTP_400
+            resp.body = '{message: "Todo object not in request"}'
+            return
+        item = todo.New(t["content"])
         self.service.save(item)
         resp.media = item.to_dict()

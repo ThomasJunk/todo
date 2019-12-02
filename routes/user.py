@@ -37,9 +37,14 @@ class User(RouteBase):
             resp (resp): response
         """
         user = req.media.get("user")
+        if user is None:
+            resp.status = falcon.HTTP_400
+            resp.body = '{message: "User object not in request"}'
+            return
         try:
             item = self.service.create_new_user(
                 user["login"], user["password"])
             resp.media = item.to_dict()
         except UserExists:
+            resp.body = '{message: "User exisits"}'
             resp.status = falcon.HTTP_409
