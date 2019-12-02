@@ -10,7 +10,7 @@ import falcon
 from beaker.middleware import SessionMiddleware
 from dotenv import load_dotenv
 
-import db
+import database
 import middleware
 import routes
 import todo
@@ -27,12 +27,13 @@ app = falcon.API(
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-db = db.create_database(os.getenv("DBFILE", "db.json"))
+database.db.bind(provider='sqlite', filename='db.sqlite', create_db=True)
+database.db.generate_mapping(create_tables=True)
 
 login = routes.Login()
 logout = routes.Logout()
-todos = routes.Todo(todo.create_Service(db, logging), logging)
-users = routes.User(user.create_Service(db, logging), logging)
+todos = routes.Todo(todo.create_Service(logging), logging)
+users = routes.User(user.create_Service(logging), logging)
 
 app.add_route("/login", login)
 app.add_route("/logout", logout)

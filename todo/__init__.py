@@ -5,10 +5,10 @@
 
 from .repository import Repository
 from .service import Service
-from .todo import Todo as New
+from .todo import Todo
 
 
-def create_Service(db, log):
+def create_Service(log):
     """Injects db connection and sets up service
 
     Args:
@@ -17,6 +17,6 @@ def create_Service(db, log):
     Returns:
         object: ToDo Handler
     """
-    todo_repository = Repository(db.table("todos"), log)
+    todo_repository = Repository(Todo, log)
     todo_service = Service(todo_repository, log)
     return todo_service

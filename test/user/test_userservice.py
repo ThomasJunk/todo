@@ -7,7 +7,7 @@ from unittest.mock import Mock
 
 from passlib.hash import argon2
 
-from user import Service, UserExists
+from user import Service, UserExists, User
 
 mock_repo = Mock()
 mock_logger = Mock()
@@ -29,7 +29,9 @@ def get_user():
 
 class TestClass:
     def test_list_clears_passwords(self):
-        mock_repo.list.return_value = [get_user()]
+        item = Mock()
+        item.to_dict.return_value = get_user()
+        mock_repo.list.return_value = [item]
         result = user_service.list()
         assert len(result) == 1
         assert result[0]["password"] == ""
@@ -40,10 +42,16 @@ class TestClass:
             _ = user_service.create_new_user("test", test_password)
 
     def test_create_user(self):
+        login = "test"
+        user = Mock()
+        user.login = login
+        user.password = test_password
+        user.to_dict.return_value = get_user()
         mock_repo.exists.return_value = False
-        result = user_service.create_new_user("test", test_password)
-        assert result.password == ""
-        assert result.login == "test"
+        mock_repo.save.return_value = user
+        result = user_service.create_new_user(login, test_password)
+        assert result["password"] == ""
+        assert result["login"] == "test"
 
     def test_grant_login(self):
         mock_repo.get_user_by_login.return_value = get_user()

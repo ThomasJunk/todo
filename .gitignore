@@ -114,6 +114,7 @@ dmypy.json
 # Ignore all local history of files
 .history
 db.json
+db.sqlite
 .venv
 cov.xml
 # End of https://www.gitignore.io/api/python,visualstudiocode

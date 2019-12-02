@@ -62,9 +62,7 @@ class TestUserRoutes:
     def test_create_user(self):
         req = build_request_with_user()
         req.media = {"user": get_user()}
-        item = mock.Mock()
-        item.to_dict.return_value = get_user()
-        mock_service.create_new_user.return_value = item
+        mock_service.create_new_user.return_value = get_user()
         user_route.on_post(req, resp)
         assert resp.media is not None
         assert resp.media["login"] == login

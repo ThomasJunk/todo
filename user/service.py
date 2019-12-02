@@ -9,8 +9,6 @@ from passlib.hash import argon2
 import groups
 import service
 
-from .user import User
-
 
 class UserExists(Exception):
     """Exception thrown when user exists
@@ -49,7 +47,7 @@ class Service(service.Base):
             generator: set of the items in the database
         """
         users = self.repository.list()
-        cleared = [self.clear_password(u) for u in users]
+        cleared = [self.clear_password(u.to_dict()) for u in users]
         return cleared
 
     def create_new_user(self, login, password):
@@ -66,15 +64,14 @@ class Service(service.Base):
             object: User
         """
         pw_hash = argon2.using(rounds=5).hash(password)
-        usr = User(login=login,
-                   password=pw_hash,
-                   groups=groups.default_groups
-                   )
         exists = self.repository.exists(login)
         if exists:
             raise UserExists()
-        self.repository.save(usr)
-        return self.clear_password(usr)
+        usr = self.repository.save(login=login,
+                                   password=pw_hash,
+                                   groups=groups.default_groups
+                                   )
+        return self.clear_password(usr.to_dict())
 
     def grant_login(self, login, password):
         """Checks whether login and password match

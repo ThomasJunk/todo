@@ -2,16 +2,16 @@
 """Todo represents a Todo
 """
 import uuid
+from database import db
+from pony.orm import *
 
 
-class Todo:
+class Todo(db.Entity):
     """The actual Todo
     """
-
-    def __init__(self, body, id=None, completed=False):
-        self.id = id or str(uuid.uuid4())
-        self.body = body
-        self.completed = completed or False
+    id = PrimaryKey(str)
+    body = Required(str)
+    completed = Optional(bool)
 
     @property
     def is_completed(self):

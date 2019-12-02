@@ -11,6 +11,17 @@ class Service(service.Base):
         service (object): Baseclass
     """
 
+    def create(self, content):
+        """creates new todo
+
+        Args:
+            content (string): The actual todo
+
+        Returns:
+            ToDo: a todo object
+        """
+        return self.repository.create(content)
+
     def get_completed(self):
         """gets completed ToDos
         """

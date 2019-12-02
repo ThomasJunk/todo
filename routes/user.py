@@ -45,7 +45,7 @@ class User(RouteBase):
         try:
             item = self.service.create_new_user(
                 user["login"], user["password"])
-            resp.media = item.to_dict()
+            resp.media = item
         except UserExists:
             resp.body = '{message: "User exisits"}'
             resp.status = falcon.HTTP_409

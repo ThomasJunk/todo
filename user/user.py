@@ -2,18 +2,20 @@
 """User represents the user
 """
 
+from pony.orm import *
+from database import db
 
-class User:
+
+class User(db.Entity):
     """User object
 
     Returns:
         object: user
     """
 
-    def __init__(self, login, password, groups=None):
-        self.login = login
-        self.password = password
-        self.usergroups = set(groups)
+    login = Required(str)
+    password = Required(str)
+    usergroups = Required(StrArray)
 
     @property
     def groups(self):
@@ -30,6 +32,8 @@ class User:
         Args:
             group (string): group name
         """
+        if group in self.usergroups:
+            return
         self.usergroups.add(group)
 
     def del_group(self, group):

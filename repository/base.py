@@ -2,33 +2,27 @@
 """Baseclass for repositories
 """
 
-# pylint: disable = invalid-name, too-few-public-methods
+from pony.orm import *
 
 
 class Base:
     """Baseclass for repositories
     """
 
-    def __init__(self, database, log):
-        self.db = database
+    def __init__(self, entity, log):
+        self.entity = entity
         self.log = log
 
+    @db_session
     def list(self):
         """Lists all items
 
         Returns:
             generator: set of the items in the database
         """
-        return (item for item in self.db)
+        return select(e for e in self.entity)[:]
 
+    @db_session
     def save(self, item):
-        """Saves a item
-
-        Args:
-            item (object): am item
-
-        Returns:
-            object: saved item
-        """
-        self.db.insert(item.to_dict())
+        commit()
         return item

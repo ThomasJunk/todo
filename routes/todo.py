@@ -26,7 +26,8 @@ class Todo(RouteBase):
             resp (resp): response
         """
         todos = self.service.list()
-        resp.media = list(todos)
+        result = map(lambda x: x.to_dict(), todos)
+        resp.media = list(result)
 
     @falcon.before(login_required)
     def on_post(self, req, resp):
@@ -41,6 +42,5 @@ class Todo(RouteBase):
             resp.status = falcon.HTTP_400
             resp.body = '{message: "Todo object not in request"}'
             return
-        item = todo.New(t["content"])
-        self.service.save(item)
+        item = self.service.create(t["content"])
         resp.media = item.to_dict()

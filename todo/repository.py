@@ -2,8 +2,8 @@
 """ToDo Repository
 """
 
-from tinydb import Query
-
+from pony.orm import *
+import uuid
 import repository
 
 
@@ -17,6 +17,7 @@ class Repository(repository.Base):
         object: instance of the repository
     """
 
+    @db_session
     def get_by_id(self, id):
         """Retieves a specific ToDo
 
@@ -26,9 +27,13 @@ class Repository(repository.Base):
         Returns:
             object: ToDo
         """
-        Todo = Query()
-        item = self.db.search(Todo.id == id)
-        return item
+        return self.entity.select(lambda x: x.id == id)
+
+    @db_session
+    def create(self, content):
+        uid = str(uuid.uuid4())
+        t = self.entity(id=uid, body=content, completed=False)
+        return t
 
     def delete(self, todo):
         """Deletes specific ToDo
