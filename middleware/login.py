@@ -15,7 +15,8 @@ def login_required(req, resp, resource, params):
         resource (object): Ressource accessed
         params (object): Params
     """
-    if "user" in req.context.session:
+    session = req.context.session
+    if "user" in session:
         return
     else:
         raise falcon.HTTPUnauthorized("User is not logged in")

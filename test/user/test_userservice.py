@@ -1,7 +1,6 @@
 """Tests Userservice
 """
 
-import pdb
 import pytest
 
 from unittest.mock import Mock
@@ -36,10 +35,9 @@ class TestClass:
         assert result[0]["password"] == ""
 
     def test_create_existing_user(self):
-        with pytest.raises(UserExists) as ex:
+        with pytest.raises(UserExists):
             mock_repo.exists.return_value = True
             _ = user_service.create_new_user("test", test_password)
-            assert isinstance(ex, UserExists)
 
     def test_create_user(self):
         mock_repo.exists.return_value = False
@@ -50,14 +48,14 @@ class TestClass:
     def test_grant_login(self):
         mock_repo.get_user_by_login.return_value = get_user()
         result = user_service.grant_login("test", test_password)
-        assert result == True
+        assert result
 
     def test_grant_login_no_user(self):
         mock_repo.get_user_by_login.return_value = None
         result = user_service.grant_login("test", test_password)
-        assert result == False
+        assert not result
 
     def test_grant_login_wrong_passphrase(self):
         mock_repo.get_user_by_login.return_value = get_user()
         result = user_service.grant_login("test", test_password2)
-        assert result == False
+        assert not result
