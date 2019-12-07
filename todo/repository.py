@@ -2,8 +2,10 @@
 """ToDo Repository
 """
 
-from pony.orm import *
 import uuid
+
+from pony.orm import *
+
 import repository
 
 
@@ -18,21 +20,11 @@ class Repository(repository.Base):
     """
 
     @db_session
-    def get_by_id(self, id):
-        """Retieves a specific ToDo
-
-        Args:
-            id (string): identifier of the todo
-
-        Returns:
-            object: ToDo
-        """
-        return self.entity.select(lambda x: x.id == id)
-
-    @db_session
-    def create(self, content):
-        uid = str(uuid.uuid4())
-        t = self.entity(id=uid, body=content, completed=False)
+    def create(self, todo):
+        t = self.entity(id=todo.id,
+                        body=todo.content,
+                        completed=todo.completed
+                        )
         return t
 
     def delete(self, todo):

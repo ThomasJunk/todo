@@ -20,7 +20,9 @@ class Service(service.Base):
         Returns:
             ToDo: a todo object
         """
-        return self.repository.create(content)
+        todo = self.model(content)
+        result = self.repository.create(todo)
+        return self.model(**result.to_dict())
 
     def get_completed(self):
         """gets completed ToDos

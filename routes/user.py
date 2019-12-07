@@ -27,7 +27,7 @@ class User(RouteBase):
             resp (resp): response
         """
         users = self.service.list()
-        resp.media = list(users)
+        resp.media = [u.to_dict() for u in users]
 
     @falcon.before(login_required)
     def on_post(self, req, resp):
@@ -45,7 +45,7 @@ class User(RouteBase):
         try:
             item = self.service.create_new_user(
                 user["login"], user["password"])
-            resp.media = item
+            resp.media = item.to_dict()
         except UserExists:
             resp.body = '{message: "User exisits"}'
             resp.status = falcon.HTTP_409

@@ -2,7 +2,6 @@
 """User Repository
 """
 import repository
-from .user import User
 from pony.orm import db_session, commit
 
 
@@ -24,11 +23,6 @@ class Repository(repository.Base):
         """
         users = self.get_user_by_login(login)
         return len(users) > 0
-
-    @db_session
-    def save(self, password, login, groups):
-        user = User(login=login, password=password, usergroups=groups)
-        return user
 
     @db_session
     def get_user_by_login(self, login):

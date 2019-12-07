@@ -49,7 +49,9 @@ class TestUserRoutes:
 
     def test_list_users(self):
         req = build_request_with_user()
-        mock_service.list.return_value = [get_user()]
+        mock_user = mock.Mock()
+        mock_user.to_dict.return_value = get_user()
+        mock_service.list.return_value = [mock_user]
         user_route.on_get(req, resp)
         assert len(resp.media) == 1
 
@@ -62,7 +64,9 @@ class TestUserRoutes:
     def test_create_user(self):
         req = build_request_with_user()
         req.media = {"user": get_user()}
-        mock_service.create_new_user.return_value = get_user()
+        mock_user = mock.Mock()
+        mock_user.to_dict.return_value = get_user()
+        mock_service.create_new_user.return_value = mock_user
         user_route.on_post(req, resp)
         assert resp.media is not None
         assert resp.media["login"] == login

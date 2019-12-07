@@ -14,6 +14,18 @@ class Base:
         self.log = log
 
     @db_session
+    def get_by_id(self, id):
+        """Retieves a specific ToDo
+
+        Args:
+            id (string): identifier of the todo
+
+        Returns:
+            object: ToDo
+        """
+        return self.entity.select(lambda x: x.id == id)
+
+    @db_session
     def list(self):
         """Lists all items
 
@@ -24,5 +36,5 @@ class Base:
 
     @db_session
     def save(self, item):
-        commit()
-        return item
+        result = self.entity(**item.to_dict())
+        return result

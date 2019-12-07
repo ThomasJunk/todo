@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Provides access to the User internals
 """
+from .entity import User as Entity
 from .repository import Repository
 from .service import Service, UserExists
 from .user import User
@@ -16,6 +17,6 @@ def create_Service(log):
     Returns:
         object: User Handler
     """
-    repo = Repository(User, log)
-    srv = Service(repo, log)
+    repo = Repository(Entity, log)
+    srv = Service(repo, log, User)
     return srv

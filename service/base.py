@@ -7,9 +7,10 @@ class Base:
     """Baseclass for repositories
     """
 
-    def __init__(self, repository, log):
+    def __init__(self, repository, log, model):
         self.repository = repository
         self.log = log
+        self.model = model
 
     def list(self):
         """Lists all items
@@ -17,7 +18,8 @@ class Base:
         Returns:
             generator: set of the items in the database
         """
-        return self.repository.list()
+        result = self.repository.list()
+        return map(lambda entity: self.model(**entity.to_dict()), result)
 
     def get_by_id(self, id):
         """Retieves a specific item by id
@@ -28,7 +30,8 @@ class Base:
         Returns:
             object: item
         """
-        return self.repository.get_by_id(id)
+        result = self.repository.get_by_id(id)
+        return self.model(**result.to_dict())
 
     def save(self, item):
         """Saves an item
@@ -39,7 +42,8 @@ class Base:
         Returns:
             object: saved item
         """
-        return self.repository.save(item)
+        result = self.repository.save(item)
+        return self.model(**result.to_dict())
 
     def delete(self, item):
         """Deletes specific item

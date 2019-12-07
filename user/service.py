@@ -34,10 +34,7 @@ class Service(service.Base):
         Returns:
             object: clean user
         """
-        if hasattr(user, "password"):
-            user.password = ""
-        else:
-            user["password"] = ""
+        user.password = ""
         return user
 
     def list(self):
@@ -46,8 +43,9 @@ class Service(service.Base):
         Returns:
             generator: set of the items in the database
         """
-        users = self.repository.list()
-        cleared = [self.clear_password(u.to_dict()) for u in users]
+        users = map(lambda entity: self.model(
+            **entity.to_dict()), self.repository.list())
+        cleared = map(lambda user: self.clear_password(user), users)
         return cleared
 
     def create_new_user(self, login, password):
@@ -67,11 +65,12 @@ class Service(service.Base):
         exists = self.repository.exists(login)
         if exists:
             raise UserExists()
-        usr = self.repository.save(login=login,
-                                   password=pw_hash,
-                                   groups=groups.default_groups
-                                   )
-        return self.clear_password(usr.to_dict())
+        usr = self.model(login=login,
+                         password=pw_hash,
+                         groups=groups.default_groups
+                         )
+        result = self.repository.save(usr)
+        return self.clear_password(self.model(**result.to_dict()))
 
     def grant_login(self, login, password):
         """Checks whether login and password match
@@ -87,4 +86,4 @@ class Service(service.Base):
         user = self.repository.get_user_by_login(login)
         if not user:
             return False
-        return argon2.verify(password, user["password"])
+        return argon2.verify(password, user.password)
