@@ -83,7 +83,8 @@ class Service(service.Base):
             bool: Login granted
         """
         dummy = secrets.token_urlsafe(16)
+        pw_hash = argon2.using(rounds=5).hash(dummy)
         user = self.repository.get_user_by_login(login)
         if not user:
-            return False
+            return argon2.verify(password, pw_hash)
         return argon2.verify(password, user.password)
