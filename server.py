@@ -21,7 +21,8 @@ load_dotenv()
 app = falcon.API(
     middleware=[
         middleware.RequestID(),
-        middleware.Session()
+        middleware.Session(),
+        middleware.SecureHeadersMiddleware()
     ]
 )
 
