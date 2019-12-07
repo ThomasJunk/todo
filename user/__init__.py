@@ -5,6 +5,7 @@ from .entity import User as Entity
 from .repository import Repository
 from .service import Service, UserExists
 from .user import User
+from crypto import Service as CryptoService
 
 
 def create_Service(log):
@@ -18,5 +19,5 @@ def create_Service(log):
         object: User Handler
     """
     repo = Repository(Entity, log)
-    srv = Service(repo, log, User)
+    srv = Service(repo, log, User, CryptoService)
     return srv

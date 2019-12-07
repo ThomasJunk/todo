@@ -2,10 +2,6 @@
 """User Service
 """
 
-import secrets
-
-from passlib.hash import argon2
-
 import groups
 import service
 
@@ -24,6 +20,12 @@ class Service(service.Base):
     Args:
         service (object): Baseclass
     """
+
+    def __init__(self, repository, log, model, cryptoservice):
+        self.repository = repository
+        self.log = log
+        self.model = model
+        self.cryptoservice = cryptoservice
 
     def clear_password(self, user):
         """clears password
@@ -61,7 +63,7 @@ class Service(service.Base):
         Returns:
             object: User
         """
-        pw_hash = argon2.using(rounds=5).hash(password)
+        pw_hash = self.cryptoservice.hash_password(password)
         exists = self.repository.exists(login)
         if exists:
             raise UserExists()
@@ -82,9 +84,9 @@ class Service(service.Base):
         Returns:
             bool: Login granted
         """
-        dummy = secrets.token_urlsafe(16)
-        pw_hash = argon2.using(rounds=5).hash(dummy)
+        dummy_password = self.cryptoservice.generate_dummytoken()
+        dummy_hash = self.cryptoservice.hash_password(dummy_password)
         user = self.repository.get_user_by_login(login)
         if not user:
-            return argon2.verify(password, pw_hash)
-        return argon2.verify(password, user.password)
+            return self.cryptoservice.verify_password(password, dummy_hash)
+        return self.cryptoservice.verify_password(password, user.password)

@@ -5,24 +5,24 @@ import pytest
 
 import unittest.mock as mock
 
-from passlib.hash import argon2
-
 from user import Service, UserExists, User
 
 mock_repo = mock.Mock()
 mock_logger = mock.Mock()
 mock_entity = mock.Mock()
+mock_crypto_service = mock.Mock()
 
-user_service = Service(mock_repo, mock_logger, mock_entity)
-test_password = "password"
-test_password2 = argon2.using(rounds=5).hash("wrong password")
+user_service = Service(mock_repo,
+                       mock_logger,
+                       mock_entity,
+                       mock_crypto_service
+                       )
 
 
 def get_user():
-    pw_hash = argon2.using(rounds=5).hash(test_password)
     user = {
         "login": "test",
-        "password": pw_hash,
+        "password": "password",
         "groups": ["user"]
     }
     return user
@@ -31,7 +31,7 @@ def get_user():
 class TestClass:
     def test_list_clears_passwords(self):
         mock_user = mock.Mock()
-        mock_user.password = test_password
+        mock_user.password = "test"
         result = user_service.clear_password(mock_user)
         assert result.password == ""
 
@@ -54,21 +54,22 @@ class TestClass:
     def test_grant_login(self):
         user = get_user()
         mock_user = mock.Mock()
-        mock_user.password = user["password"]
         mock_repo.get_user_by_login.return_value = mock_user
-        result = user_service.grant_login(user["login"], test_password)
+        mock_crypto_service.verify_password.return_value = True
+        result = user_service.grant_login(user["login"], "test")
         assert result
 
     def test_grant_login_no_user(self):
         mock_repo.get_user_by_login.return_value = None
+        mock_crypto_service.verify_password.return_value = False
         user = get_user()
-        result = user_service.grant_login(user["login"], test_password)
+        result = user_service.grant_login(user["login"], "test")
         assert not result
 
     def test_grant_login_wrong_passphrase(self):
         mock_user = mock.Mock()
-        mock_user.password = test_password2
         mock_repo.get_user_by_login.return_value = mock_user
+        mock_crypto_service.verify_password.return_value = False
         user = get_user()
-        result = user_service.grant_login(user["login"], test_password)
+        result = user_service.grant_login(user["login"], "test")
         assert not result
