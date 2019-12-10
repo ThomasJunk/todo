@@ -2,7 +2,7 @@
 """User Service
 """
 
-import groups
+import acl
 import service
 
 
@@ -69,7 +69,7 @@ class Service(service.Base):
             raise UserExists()
         usr = self.model(login=login,
                          password=pw_hash,
-                         groups=groups.default_groups
+                         groups=acl.default_groups
                          )
         result = self.repository.save(usr)
         return self.clear_password(self.model(**result.to_dict()))
